@@ -1,5 +1,56 @@
 # Code
 
+## Windows box
+```
+import os
+import subprocess
+
+def create_and_launch_sandbox():
+    # 1. 定义 .wsb 配置文件的内容（XML 格式）
+    # 你可以在这里像搭积木一样，定制你的专属沙盒环境
+    wsb_content = """<Configuration>
+  <!-- 启用虚拟GPU，让沙盒里的界面更流畅 -->
+  <VGpu>Enable</VGpu>
+  
+  <!-- 禁用网络！打造一个绝对断网的单机测试环境 -->
+  <Networking>Disable</Networking>
+  
+  <!-- 映射主机文件夹：把你电脑上的文件夹“刻录”进沙盒 -->
+  <MappedFolders>
+    <MappedFolder>
+      <!-- 这里写你电脑上真实存在的文件夹路径 -->
+      <HostFolder>C:\\Users\\Public\\Documents</HostFolder>
+      <!-- 设为 true 表示沙盒里只能看不能改，保护你的原文件 -->
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+
+  <!-- 登录命令：沙盒启动后，自动帮你打开记事本 -->
+  <LogonCommand>
+    <Command>notepad.exe</Command>
+  </LogonCommand>
+</Configuration>
+"""
+
+    # 2. 将配置内容“刻录”成一个真实的 .wsb 文件
+    wsb_filename = "My_Custom_Sandbox.wsb"
+    print(f"--- 🛠️ 正在刻录专属沙盒配置文件: {wsb_filename} ---")
+    with open(wsb_filename, "w", encoding="utf-8") as f:
+        f.write(wsb_content)
+    
+    # 3. 指挥 Windows 启动这个定制好的沙盒
+    print("--- 🚀 正在启动你的专属 Windows 沙盒... ---")
+    try:
+        # 使用 os.startfile 可以直接双击打开 .wsb 文件
+        os.startfile(wsb_filename)
+        print("✅ 专属沙盒已成功弹出！你可以去里面随意折腾了。")
+    except Exception as e:
+        print(f"⛔ 启动失败，请检查你的电脑是否已开启 Windows 沙盒功能。\n报错: {e}")
+
+if __name__ == "__main__":
+    create_and_launch_sandbox()
+```
+
 ## code_anim.py
 ```
 import torch
